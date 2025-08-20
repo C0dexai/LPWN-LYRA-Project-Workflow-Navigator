@@ -1,0 +1,8 @@
+{
+  "name": "LPWN-LYRA: Project Workflow Navigator",
+  "description": "An interactive application that guides users through software project workflows, provides access to a family of AI agents, demonstrates A2A orchestration, and includes a System Operator view for simulating AI-assisted application builds.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "prompt": ""
+}
