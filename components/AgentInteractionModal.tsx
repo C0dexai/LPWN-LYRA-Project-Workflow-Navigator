@@ -13,6 +13,35 @@ declare global {
 
 const SpeechRecognition = typeof window !== 'undefined' ? window.SpeechRecognition || window.webkitSpeechRecognition : null;
 
+// Helper to determine speech characteristics from an agent's voice style description.
+const getSpeechConfigFromStyle = (voiceStyle: string): { pitch: number; rate: number } => {
+  const style = voiceStyle.toLowerCase();
+  let pitch = 1.0;
+  let rate = 1.0;
+
+  // Pitch adjustments based on descriptive keywords
+  if (style.includes('deep') || style.includes('low') || style.includes('gritty')) {
+    pitch = 0.8;
+  }
+  if (style.includes('uplifting') || style.includes('sharp')) {
+    pitch = 1.1;
+  }
+  
+  // Rate adjustments based on descriptive keywords
+  if (style.includes('quick') || style.includes('animated') || style.includes('high-energy')) {
+    rate = 1.15;
+  }
+  if (style.includes('measured') || style.includes('calm') || style.includes('patient') || style.includes('quiet') || style.includes('smooth')) {
+    rate = 0.9;
+  }
+  if (style.includes('assertive') || style.includes('commanding')) {
+    rate = 1.05;
+  }
+
+  return { pitch, rate };
+};
+
+
 interface AgentInteractionModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -48,8 +77,10 @@ const AgentInteractionModal = ({ isOpen, onClose, agent }: AgentInteractionModal
         utterance.voice = selectedVoice;
     }
     
-    utterance.pitch = 1;
-    utterance.rate = 1;
+    // Use the agent's voice_style to set pitch and rate
+    const { pitch, rate } = getSpeechConfigFromStyle(agent.voice_style);
+    utterance.pitch = pitch;
+    utterance.rate = rate;
 
     window.speechSynthesis.speak(utterance);
   }, [voices]);

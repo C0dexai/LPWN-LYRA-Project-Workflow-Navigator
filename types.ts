@@ -2,6 +2,7 @@ import React from 'react';
 
 export interface Activity {
   name: string;
+  priority: 'High' | 'Medium' | 'Low';
 }
 
 export interface WorkflowPhase {
